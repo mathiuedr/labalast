@@ -1,4 +1,6 @@
 const { Telegraf,Markup } = require('telegraf')
+const fs = require('fs');
+
 
 const bot = new Telegraf('6680885927:AAGKRTDv9C8BwbDzCg9TdgDivzIiDeEDLCY')
 bot.start((ctx) => {
@@ -96,6 +98,28 @@ bot.hears('Доп инфа', ctx => {
         }
     })
 })
+
+bot.action('progadop', ctx => {
+    let myfiles = fs.readFileSync(__dirname+'/res/dopinfo/proga.txt',{encoding:'utf-8'})
+    bot.telegram.sendMessage(ctx.chat.id,myfiles)
+})
+
+bot.action('linaldop', ctx => {
+    let myfiles = fs.readFileSync(__dirname+'/res/dopinfo/linal.txt',{encoding:'utf-8'})
+    bot.telegram.sendMessage(ctx.chat.id,myfiles)
+})
+bot.action('discradop', ctx => {
+    let myfiles = fs.readFileSync(__dirname+'/res/dopinfo/discra.txt',{encoding:'utf-8'})
+    bot.telegram.sendMessage(ctx.chat.id,myfiles)
+})
+
+bot.action('matandop', ctx => {
+    let myfiles = fs.readFileSync(__dirname+'/res/dopinfo/matan.txt',{encoding:'utf-8'})
+    bot.telegram.sendMessage(ctx.chat.id,myfiles)
+})
+
+
+
 
 
 bot.launch()
