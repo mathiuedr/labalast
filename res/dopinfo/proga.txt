@@ -1,0 +1,3 @@
+https://youngcoder.ru/map.php - карта и материал для изучения языка C
+https://stepik.org -курсы на любой вкус бесплатно и платно
+https://academy.yandex.ru/handbook/algorithms - хендбук яндекса по алгоритмам и структурам данных

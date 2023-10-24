@@ -1,0 +1,3 @@
+https://matrix.reshish.com - калькулятор матриц(считает всё)
+https://www.youtube.com/playlist?list=PLEwK9wdS5g0qz0T0B6fEcJWMnJhu-1NcE - лекции линал ФКН ВШЭ ПМИ
+https://habr.com/ru/articles/746686 - Линейная алгебра самым простым языком с добавлением фишек из Python (часть 1)

@@ -1,7 +1,7 @@
 const { Telegraf, Markup } = require('telegraf')
 const fs = require('fs');
 
-var selectedGroup=0;
+var selectedGroup;
 const bot = new Telegraf('6680885927:AAGKRTDv9C8BwbDzCg9TdgDivzIiDeEDLCY')
 bot.start((ctx) => {
     return ctx.reply('Привет, выбери нужную тебе инфу',
@@ -20,19 +20,19 @@ bot.hears('Лекции', ctx => {
         reply_markup: {
             inline_keyboard: [
                 [{
-                    text: "Прога",
+                    text: "Программирование",
                     callback_data: 'proga'
                 },
                 {
-                    text: "Линал",
+                    text: "Линейная алгебра",
                     callback_data: 'linal'
                 },
                 {
-                    text: "Дискра",
+                    text: "Дескретная математика",
                     callback_data: 'discra'
                 },
                 {
-                    text: "Матан",
+                    text: "Мат анализ",
                     callback_data: 'matan'
                 }
                 ],
@@ -48,7 +48,8 @@ bot.hears('Семинары', ctx => {
         Markup.keyboard([
             Markup.button.text('7'),
             Markup.button.text('8'),
-            Markup.button.text('9')
+            Markup.button.text('9'),
+            Markup.button.text('Вернуться в меню')
         ])
     )
     bot.on('message', async (ctx) => {
@@ -60,19 +61,19 @@ bot.hears('Семинары', ctx => {
                 reply_markup: {
                     inline_keyboard: [
                         [{
-                            text: "Прога",
+                            text: "Программирование",
                             callback_data: 'progasem'
                         },
                         {
-                            text: "Линал",
+                            text: "Линейная алгебра",
                             callback_data: 'linalsem'
                         },
                         {
-                            text: "Дискра",
+                            text: "Дескретная математика",
                             callback_data: 'discrasem'
                         },
                         {
-                            text: "Матан",
+                            text: "Мат анализ",
                             callback_data: 'matansem'
                         }
                         ],
@@ -89,25 +90,36 @@ bot.hears('Семинары', ctx => {
     })
 
 })
+
+bot.hears('Вернуться в меню', ctx=>{
+    return ctx.reply('Выбери нужную тебе инфу',
+        Markup.keyboard([
+            Markup.button.text('Лекции'),
+            Markup.button.text('Семинары'),
+            Markup.button.text('Доп инфа')
+        ])
+    )
+})
+
 bot.hears('Доп инфа', ctx => {
     let msg = `Выбери интересующий тебя предмет`;
     bot.telegram.sendMessage(ctx.chat.id, msg, {
         reply_markup: {
             inline_keyboard: [
                 [{
-                    text: "Прога",
+                    text: "Программирование",
                     callback_data: 'progadop'
                 },
                 {
-                    text: "Линал",
+                    text: "Линейная алгебра",
                     callback_data: 'linaldop'
                 },
                 {
-                    text: "Дискра",
+                    text: "Дескретная математика",
                     callback_data: 'discradop'
                 },
                 {
-                    text: "Матан",
+                    text: "Мат анализ",
                     callback_data: 'matandop'
                 }
                 ],
@@ -141,40 +153,40 @@ bot.action('matandop', ctx => {
 bot.action('progasem', ctx => {
     console.log('called')
     console.log(selectedGroup)
-    let myfiles = listallfiles('sems/proga/'+selectedGroup)
+    let myfiles = listallfiles('sems/proga/' + selectedGroup)
     console.log(myfiles)
     for (let f of myfiles) {
-         bot.telegram.sendDocument(ctx.chat.id, {
-            source: "res/sems/proga/"+selectedGroup+'/' + f
+        bot.telegram.sendDocument(ctx.chat.id, {
+            source: "res/sems/proga/" + selectedGroup + '/' + f
         })
     }
 })
 
 bot.action('linalsem', ctx => {
-    let myfiles = listallfiles('sems/linal/'+selectedGroup)
+    let myfiles = listallfiles('sems/linal/' + selectedGroup)
     console.log(myfiles)
     for (let f of myfiles) {
         bot.telegram.sendDocument(ctx.chat.id, {
-            source: "res/sems/linal/" +selectedGroup+'/'+ f
+            source: "res/sems/linal/" + selectedGroup + '/' + f
         })
     }
 })
 bot.action('discrasem', ctx => {
-    let myfiles = listallfiles('sems/discra/'+selectedGroup)
+    let myfiles = listallfiles('sems/discra/' + selectedGroup)
     console.log(myfiles)
     for (let f of myfiles) {
         bot.telegram.sendDocument(ctx.chat.id, {
-            source: "res/sems/discra/"+selectedGroup+'/' + f
+            source: "res/sems/discra/" + selectedGroup + '/' + f
         })
     }
 })
 
 bot.action('matansem', ctx => {
-    let myfiles = listallfiles('sems/matan'+selectedGroup)
+    let myfiles = listallfiles('sems/matan/' + selectedGroup)
     console.log(myfiles)
     for (let f of myfiles) {
         bot.telegram.sendDocument(ctx.chat.id, {
-            source: "res/sems/matan/"+selectedGroup+'/' + f
+            source: "res/sems/matan/" + selectedGroup + '/' + f
         })
     }
 })
