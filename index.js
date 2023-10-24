@@ -1,15 +1,15 @@
-const { Telegraf,Markup } = require('telegraf')
+const { Telegraf, Markup } = require('telegraf')
 const fs = require('fs');
 
-
+var selectedGroup=0;
 const bot = new Telegraf('6680885927:AAGKRTDv9C8BwbDzCg9TdgDivzIiDeEDLCY')
 bot.start((ctx) => {
     return ctx.reply('Привет, выбери нужную тебе инфу',
-      Markup.keyboard([
-        Markup.button.text('Лекции'),
-        Markup.button.text('Семинары'),
-        Markup.button.text('Доп инфа')
-      ])
+        Markup.keyboard([
+            Markup.button.text('Лекции'),
+            Markup.button.text('Семинары'),
+            Markup.button.text('Доп инфа')
+        ])
     )
 })
 
@@ -44,35 +44,53 @@ bot.hears('Лекции', ctx => {
 
 bot.hears('Семинары', ctx => {
     let msg = `Выбери интересующий тебя предмет`;
-    ctx.deleteMessage();
-    bot.telegram.sendMessage(ctx.chat.id, msg, {
-        reply_markup: {
-            inline_keyboard: [
-                [{
-                    text: "Прога",
-                    callback_data: 'progasem'
-                },
-                {
-                    text: "Линал",
-                    callback_data: 'linalsem'
-                },
-                {
-                    text: "Дискра",
-                    callback_data: 'discrasem'
-                },
-                {
-                    text: "Матан",
-                    callback_data: 'matansem'
-                }
-                ],
+    ctx.reply('Выбери свою группу',
+        Markup.keyboard([
+            Markup.button.text('7'),
+            Markup.button.text('8'),
+            Markup.button.text('9')
+        ])
+    )
+    bot.on('message', async (ctx) => {
+        ans = ctx.update.message.text
+        console.log(ans)
+        if (ans == '7' || ans == '8' || ans == '9') {
+            selectedGroup = ans
+            bot.telegram.sendMessage(ctx.chat.id, msg, {
+                reply_markup: {
+                    inline_keyboard: [
+                        [{
+                            text: "Прога",
+                            callback_data: 'progasem'
+                        },
+                        {
+                            text: "Линал",
+                            callback_data: 'linalsem'
+                        },
+                        {
+                            text: "Дискра",
+                            callback_data: 'discrasem'
+                        },
+                        {
+                            text: "Матан",
+                            callback_data: 'matansem'
+                        }
+                        ],
 
-            ]
+                    ]
+                }
+            })
+        } else {
+            ctx.reply(`Your answer was: incorrect`);
         }
+
+
+
     })
+
 })
 bot.hears('Доп инфа', ctx => {
     let msg = `Выбери интересующий тебя предмет`;
-    ctx.deleteMessage();
     bot.telegram.sendMessage(ctx.chat.id, msg, {
         reply_markup: {
             inline_keyboard: [
@@ -100,61 +118,63 @@ bot.hears('Доп инфа', ctx => {
 })
 
 bot.action('progadop', ctx => {
-    let myfiles = fs.readFileSync(__dirname+'/res/dopinfo/proga.txt',{encoding:'utf-8'})
-    bot.telegram.sendMessage(ctx.chat.id,myfiles)
+    let myfiles = fs.readFileSync(__dirname + '/res/dopinfo/proga.txt', { encoding: 'utf-8' })
+    bot.telegram.sendMessage(ctx.chat.id, myfiles)
 })
 
 bot.action('linaldop', ctx => {
-    let myfiles = fs.readFileSync(__dirname+'/res/dopinfo/linal.txt',{encoding:'utf-8'})
-    bot.telegram.sendMessage(ctx.chat.id,myfiles)
+    let myfiles = fs.readFileSync(__dirname + '/res/dopinfo/linal.txt', { encoding: 'utf-8' })
+    bot.telegram.sendMessage(ctx.chat.id, myfiles)
 })
 bot.action('discradop', ctx => {
-    let myfiles = fs.readFileSync(__dirname+'/res/dopinfo/discra.txt',{encoding:'utf-8'})
-    bot.telegram.sendMessage(ctx.chat.id,myfiles)
+    let myfiles = fs.readFileSync(__dirname + '/res/dopinfo/discra.txt', { encoding: 'utf-8' })
+    bot.telegram.sendMessage(ctx.chat.id, myfiles)
 })
 
 bot.action('matandop', ctx => {
-    let myfiles = fs.readFileSync(__dirname+'/res/dopinfo/matan.txt',{encoding:'utf-8'})
-    bot.telegram.sendMessage(ctx.chat.id,myfiles)
+    let myfiles = fs.readFileSync(__dirname + '/res/dopinfo/matan.txt', { encoding: 'utf-8' })
+    bot.telegram.sendMessage(ctx.chat.id, myfiles)
 })
 
 
 
 bot.action('progasem', ctx => {
-    let myfiles = listallfiles('sems/proga')
+    console.log('called')
+    console.log(selectedGroup)
+    let myfiles = listallfiles('sems/proga/'+selectedGroup)
     console.log(myfiles)
     for (let f of myfiles) {
-        bot.telegram.sendDocument(ctx.chat.id, {
-            source: "res/sems/proga/" + f
+         bot.telegram.sendDocument(ctx.chat.id, {
+            source: "res/sems/proga/"+selectedGroup+'/' + f
         })
     }
 })
 
 bot.action('linalsem', ctx => {
-    let myfiles = listallfiles('sems/linal')
+    let myfiles = listallfiles('sems/linal/'+selectedGroup)
     console.log(myfiles)
     for (let f of myfiles) {
         bot.telegram.sendDocument(ctx.chat.id, {
-            source: "res/sems/linal/" + f
+            source: "res/sems/linal/" +selectedGroup+'/'+ f
         })
     }
 })
 bot.action('discrasem', ctx => {
-    let myfiles = listallfiles('sems/discra')
+    let myfiles = listallfiles('sems/discra/'+selectedGroup)
     console.log(myfiles)
     for (let f of myfiles) {
         bot.telegram.sendDocument(ctx.chat.id, {
-            source: "res/sems/discra/" + f
+            source: "res/sems/discra/"+selectedGroup+'/' + f
         })
     }
 })
 
 bot.action('matansem', ctx => {
-    let myfiles = listallfiles('sems/matan')
+    let myfiles = listallfiles('sems/matan'+selectedGroup)
     console.log(myfiles)
     for (let f of myfiles) {
         bot.telegram.sendDocument(ctx.chat.id, {
-            source: "res/sems/matan/" + f
+            source: "res/sems/matan/"+selectedGroup+'/' + f
         })
     }
 })
